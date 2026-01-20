@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import userModle from "../models/userModel.js";
+import userModel from "../models/userModel.js";
 
 // User registration
 export const register = async (req, res) => {
@@ -16,7 +16,7 @@ export const register = async (req, res) => {
 
   try {
     // Check if user already exists
-    const existingUser = await userModle.findOne({ email });
+    const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const newUser = await userModle.create({
+    const newUser = await userModel.create({
       name: name,
       email: email,
       password: hashedPassword,
@@ -50,7 +50,7 @@ export const register = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-      maxAge: 7 * 24 * 60 ** 60 * 1000, // a week
+      maxAge: 60 * 60 * 1000, // a1hr
     });
 
     // Respond with success
@@ -85,7 +85,7 @@ export const login = async (req, res) => {
 
   try {
     // Check if user exist
-    const userExist = await userModle.findOne({ email });
+    const userExist = await userModel.findOne({ email });
 
     if (!userExist)
       return res.status(401).json({
@@ -111,7 +111,7 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-      maxAge: 7 * 24 * 60 ** 60 * 1000, // a week
+      maxAge: 60 * 60 * 1000, // 1hr
     });
 
     // Respond with success
