@@ -34,13 +34,6 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
-    if (!newUser) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
-
     // Genrate token
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1hr",

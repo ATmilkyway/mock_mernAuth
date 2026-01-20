@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv/config";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/mongodb.js";
+import authRouter from "./routes/authRoute.js";
 
 // app
 const app = express();
@@ -24,9 +25,10 @@ app.use(
 app.get("/", (req, res) => {
   res.status(200).json("API is working");
 });
+app.use("/api/auth/", authRouter);
 
 // start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 try {
   app.listen(PORT, () => {
     console.log(`Server 🟢 http://localhost:${PORT}`);
