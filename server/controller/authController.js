@@ -130,3 +130,26 @@ export const login = async (req, res) => {
     });
   }
 };
+
+// User logout
+export const logout = () => async (req, res) => {
+  try {
+    // Clear the cookie
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
+    });
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully.",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: "An error occurred while logging out.",
+    });
+  }
+};
