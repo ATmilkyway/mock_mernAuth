@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import userModle from "../models/userModel";
+import userModle from "../models/userModel.js";
 
 // User registration
 export const register = async (req, res) => {
@@ -116,7 +116,7 @@ export const login = async (req, res) => {
 
     // Respond with success
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "Login succssful",
       user: {
         id: userExist._id,
@@ -132,7 +132,7 @@ export const login = async (req, res) => {
 };
 
 // User logout
-export const logout = () => async (req, res) => {
+export const logout = async (req, res) => {
   try {
     // Clear the cookie
     res.clearCookie("token", {
