@@ -156,3 +156,54 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+// User Verification
+export const sendVerifyOtp = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId);
+
+    // Check if user exist
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Already verified?
+    if (user.isAccountVerified) {
+      res.status(200).json({
+        success: false,
+        message: "User is already verified",
+      });
+    }
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(otp, 10);
+
+    await userModel.findByIdAndUpdate(userId, {
+      verifyOtp: hashedOtp,
+      verifyOtpExpiresAt: Date.now() + 10 * 60 * 1000, // 10 min
+    });
+
+    // Send Otp email
+    const mailOptions = {
+      from: `"Your App Name" <${process.env.SENDER_EMAIL}>`,
+      to: user.email,
+      subject: "Account Verification OTP",
+      text: `Your OTP is ${otp}`,
+    };
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({
+      success: true,
+      message: "Verification OTP sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
