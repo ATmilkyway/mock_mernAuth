@@ -275,3 +275,18 @@ export const verifyEmail = async (req, res) => {
     });
   }
 };
+
+// Check if user is authenticated
+export const isAuthenticated = async (req, res) => {
+  try {
+    return res.status(200).json({
+      success:true,
+      message:''
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
