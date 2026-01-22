@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import transporter from "../config/nodemailer.js";
 
-
 // User registration
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -162,7 +161,7 @@ export const logout = async (req, res) => {
 // Send Otp
 export const sendVerifyOtp = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.userId;
     const user = await userModel.findById(userId);
 
     // Check if user exist
@@ -213,8 +212,8 @@ export const sendVerifyOtp = async (req, res) => {
 // Verify email
 export const verifyEmail = async (req, res) => {
   try {
-    const { userId, otp } = req.body;
-
+    const userId = req.userId;
+    const { otp } = req.body;
     // Validate input
     if (!userId || !otp) {
       return res.status(400).json({
