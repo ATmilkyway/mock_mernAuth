@@ -280,9 +280,57 @@ export const verifyEmail = async (req, res) => {
 export const isAuthenticated = async (req, res) => {
   try {
     return res.status(200).json({
-      success:true,
-      message:''
-    })
+      success: true,
+      message: "",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// Send password reset Otp
+export const sendResetOtp = async (req, res) => {
+  const { email } = req.body;
+
+  // Input validation
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required.",
+    });
+  }
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(otp, 10);
+
+    user.resetOtp = hashedOtp;
+    user.resetOtpExpireAt = Date.now() + 10 * 60 * 1000; // 10 min
+
+    await user.save();
+
+    const mailOptions = {
+      from: `"Your App Name" <${process.env.SENDER_EMAIL}>`,
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Your OTP is ${otp}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to your email",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
