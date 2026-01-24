@@ -14,12 +14,12 @@ const userSchama = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select: false,
+      // select: false,
     },
     verifyOtp: {
       type: String,
       default: "",
-      select: false,
+      // select: false,
     },
     verifyOtpExpiresAt: {
       type: Number,
@@ -32,7 +32,7 @@ const userSchama = new mongoose.Schema(
     resetOtp: {
       type: String,
       default: "",
-      select: false,
+      // select: false,
     },
     resetOtpExpireAt: {
       type: Number,
