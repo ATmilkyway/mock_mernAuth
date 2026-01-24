@@ -12,12 +12,15 @@ const app = express();
 // db
 connectDB();
 
+// Allowd origins
+const allowdOrigins = ["http://localhost:5173"];
+
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "http://localhost:5173",
+    origin: allowdOrigins,
     credentials: true,
   }),
 );
