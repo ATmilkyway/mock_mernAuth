@@ -1,9 +1,11 @@
-import NavBar from "../components/NavBar";
+import Header from '../components/Header';
+import NavBar from '../components/NavBar';
 
 const Home = () => {
   return (
-    <div>
+    <div className='flex min-h-screen flex-col items-center bg-[url("/bg_img.png")] bg-cover bg-center'>
       <NavBar />
+      <Header />
     </div>
   );
 };
