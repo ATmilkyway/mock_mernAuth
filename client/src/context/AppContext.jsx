@@ -12,6 +12,7 @@ export const AppContextProvider = ({ children }) => {
     isLoggedIn,
     userData,
     setUserData,
+    setIsLoggedIn,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

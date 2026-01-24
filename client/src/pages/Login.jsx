@@ -1,13 +1,40 @@
-import React, { useState } from 'react';
-import { assets } from '../assets/assets';
+import axios from 'axios';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { assets } from '../assets/assets';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { backendURL, isLoggedIn, setIsLoggedIn, userData, setUserData } = useContext(AppContext);
   const [state, setState] = useState('Sign up');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // onSubmitHandleer
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      axios.defaults.withCredentials = true;
+      const endpoint = state === 'Sign up' ? '/api/auth/register' : '/api/auth/login';
+      const payload = state === 'Sign up' ? { name, email, password } : { email, password };
+
+      const { data } = await axios.post(backendURL + endpoint, payload);
+
+      if (data.success) {
+        setIsLoggedIn(true);
+        navigate('/');
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'An error occurred');
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-200 to-purple-400 px-6 sm:px-0">
       <img
@@ -22,7 +49,7 @@ const Login = () => {
         <p className="mb-6 text-center text-sm">
           {state === 'Sign up' ? 'Create your account' : 'Login to your account'}
         </p>
-        <form action="">
+        <form onSubmit={onSubmitHandler}>
           {/* name */}
           {state === 'Sign up' && (
             <div className="mb-4 flex w-full items-center gap-3 rounded-full bg-[#333A53] px-5 py-2.5">
@@ -72,7 +99,7 @@ const Login = () => {
           >
             Forgot password?
           </p>
-          <button className="w-full rounded-full bg-linear-to-br from-indigo-500 to-indigo-900 py-2.5 font-medium">
+          <button className="w-full cursor-pointer rounded-full bg-linear-to-br from-indigo-500 to-indigo-900 py-2.5 font-medium">
             {state}
           </button>
         </form>
