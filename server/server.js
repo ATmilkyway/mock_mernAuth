@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv/config";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/mongodb.js";
-import authRouter from "./routes/authRoute.js";
+import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 // app
 const app = express();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
   res.status(200).json("API is working");
 });
 app.use("/api/auth/", authRouter);
+app.use("/api/user/", userRouter);
 
 // start server
 const PORT = process.env.PORT || 4000;
