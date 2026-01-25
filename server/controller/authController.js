@@ -40,11 +40,13 @@ export const register = async (req, res) => {
       expiresIn: "1hr",
     });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
-      maxAge: 60 * 60 * 1000, // a1hr
+      secure: isProd, // true in prod, false in dev
+      sameSite: isProd ? "strict" : "lax", // strict in prod, lax in dev
+      maxAge: 60 * 60 * 1000, // 1hr
     });
 
     // Send wellcome message
@@ -111,10 +113,12 @@ export const login = async (req, res) => {
       expiresIn: "1hr",
     });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "none",
+      secure: isProd, // true in prod, false in dev
+      sameSite: isProd ? "strict" : "lax", // strict in prod, lax in dev
       maxAge: 60 * 60 * 1000, // 1hr
     });
 
