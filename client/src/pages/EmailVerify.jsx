@@ -4,6 +4,13 @@ import { assets } from '../assets/assets';
 const EmailVerify = () => {
   const inputRefs = useRef([]);
 
+  const handleInput = (e, index) => {
+    if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-200 to-purple-400">
       <img
