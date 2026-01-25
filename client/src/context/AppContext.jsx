@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export const AppContext = createContext(null);
@@ -11,11 +11,23 @@ export const AppContextProvider = ({ children }) => {
 
   axios.defaults.withCredentials = true;
 
+  const getAuthState = async () => {
+    try {
+      const { data } = await axios.get(backendURL + '/api/auth/is-auth');
+      if (data.success) {
+        setIsLoggedIn(true);
+        getUserData();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const getUserData = async () => {
     try {
       const { data } = await axios.get(backendURL + '/api/user/data');
       if (data.success) {
-        setUserData(data.user); 
+        setUserData(data.user);
       } else {
         toast.error(data.message);
       }
@@ -23,6 +35,10 @@ export const AppContextProvider = ({ children }) => {
       toast.error(error.message || 'Error fetching user data');
     }
   };
+
+  useEffect(() => {
+    getAuthState();
+  }, []);
 
   const value = {
     backendURL,
