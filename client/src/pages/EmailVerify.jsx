@@ -10,7 +10,12 @@ const EmailVerify = () => {
     }
   };
 
-  
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-200 to-purple-400">
       <img
@@ -36,6 +41,7 @@ const EmailVerify = () => {
                 autoComplete="false"
                 ref={(e) => (inputRefs.current[index] = e)}
                 onInput={(e) => handleInput(e, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
               />
             ))}
         </div>
