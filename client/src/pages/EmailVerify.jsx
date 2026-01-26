@@ -1,8 +1,16 @@
-import { useRef } from 'react';
+import axios from 'axios';
+import { useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
 
 const EmailVerify = () => {
+  axios.defaults.withCredentials = true;
   const inputRefs = useRef([]);
+  const navigate = useNavigate();
+
+  const { backendURL, userData, isLoggedIn, getUserData } = useContext(AppContext);
 
   const handleInput = (e, index) => {
     if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
@@ -26,6 +34,24 @@ const EmailVerify = () => {
     });
   };
 
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      axios.defaults.withCredentials = true;
+
+      const otpArray = inputRefs.current.map((e) => e.value);
+      const otp = otpArray.join('');
+      const { data } = await axios.post(backendURL + '/api/auth/verify-account', { otp });
+      if (data.success) {
+        toast.success(data.message);
+        getUserData();
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-200 to-purple-400">
       <img
@@ -33,7 +59,10 @@ const EmailVerify = () => {
         className="absolute top-5 left-5 w-28 cursor-pointer sm:left-20 sm:w-32"
         onClick={() => navigate('/')}
       />
-      <form className="w-96 rounded-lg bg-slate-900 p-8 text-sm shadow-lg">
+      <form
+        className="w-96 rounded-lg bg-slate-900 p-8 text-sm shadow-lg"
+        onSubmit={onSubmitHandler}
+      >
         <h1 className="mb-4 text-center text-2xl font-semibold text-white">Email Verify OTP</h1>
         <p className="mb-6 text-center text-indigo-300">
           Enter the 6 digit code sent to your email.
@@ -55,7 +84,7 @@ const EmailVerify = () => {
               />
             ))}
         </div>
-        <button className="w-full rounded-full bg-linear-to-r from-indigo-500 to-indigo-900 py-3 text-white">
+        <button className="w-full cursor-pointer rounded-full bg-linear-to-r from-indigo-500 to-indigo-900 py-3 text-white">
           Verify email
         </button>
       </form>
