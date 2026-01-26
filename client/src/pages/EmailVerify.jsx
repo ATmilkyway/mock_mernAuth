@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
@@ -52,6 +52,9 @@ const EmailVerify = () => {
     }
   };
 
+  useEffect(() => {
+    isLoggedIn && userData && userData.isAccountVerified && navigate('/');
+  }, [isLoggedIn, userData]);
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-200 to-purple-400">
       <img
