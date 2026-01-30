@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      select: false,
+      // const user = await User.findOne({ email }).select('+password');
     },
     name: {
       type: String,
