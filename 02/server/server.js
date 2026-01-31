@@ -14,7 +14,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log("Server 🟢");
+      console.log(`Server 🟢 http://localhost:${PORT}`);
     });
   } catch (error) {
     console.log("Server 🛑", error.message);

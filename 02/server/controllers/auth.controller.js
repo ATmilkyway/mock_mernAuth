@@ -5,7 +5,7 @@ export const signup = async (req, res) => {
   const { email, password, name } = req.body;
   try {
     if (!email || !password || !name) {
-      res.status(400).json({
+    return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
@@ -35,7 +35,7 @@ export const signup = async (req, res) => {
 
     generateTokenAndSetCookies(res, newUser._id);
 
-    res.status(201).json({
+   return res.status(201).json({
       success: true,
       message: "User created successfully.",
       user: {
@@ -46,7 +46,7 @@ export const signup = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(409).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
