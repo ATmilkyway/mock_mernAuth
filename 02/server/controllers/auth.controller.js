@@ -1,11 +1,12 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookies } from "../utils/generateTokenAndSetCookies.js";
+import { sendVerificationEmail } from "../mailtrap/emails.js";
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
   try {
     if (!email || !password || !name) {
-      res.status(400).json({
+    return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
@@ -35,23 +36,24 @@ export const signup = async (req, res) => {
 
     generateTokenAndSetCookies(res, newUser._id);
 
-    res.status(201).json({
+    await sendVerificationEmail(newUser.email,verificationToken)
+
+   return res.status(201).json({
       success: true,
       message: "User created successfully.",
       user: {
         id: newUser._id,
-        username: newUser.username,
+        username: newUser.name,
         email: newUser.email,
         createdAt: newUser.createdAt,
       },
     });
   } catch (error) {
-    return res.status(409).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
-  res.send("signup");
 };
 
 export const login = async (req, res) => {
