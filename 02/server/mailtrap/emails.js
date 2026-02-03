@@ -10,13 +10,13 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const response = await mailtrapClient.send({
       from: {
-        email: process.env.SMTP_USER,
+        email: "hello@demomailtrap.co",
         name: "Mock MERN Auth",
       },
       to: recipient,
       subject: "Verify your email",
       html: VERIFICATION_EMAIL_TEMPLATE.replace(
-        "{verificationToken}",
+        "{verificationCode}",
         verificationToken,
       ),
       category: "Email Verification",
