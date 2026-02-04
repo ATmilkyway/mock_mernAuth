@@ -2,9 +2,11 @@ import express, { json } from "express";
 import { connectDB } from "./config/mongodb.js";
 import dotenv from "dotenv/config";
 import authRoutes from "./routes/auth.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 

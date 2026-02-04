@@ -57,8 +57,9 @@ export const signup = async (req, res) => {
 };
 
 export const verifyEmail = (req, res) => {
-  const { userId } = req.userId;
+  const userId = req.userId;
   console.log(userId);
+  return res.send("verifyEmail");
 };
 
 export const login = async (req, res) => {
