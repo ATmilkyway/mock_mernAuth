@@ -10,16 +10,37 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const response = await mailtrapClient.send({
       from: {
-        email: process.env.SMTP_USER,
+        email: "hello@demomailtrap.co",
         name: "Mock MERN Auth",
       },
       to: recipient,
       subject: "Verify your email",
       html: VERIFICATION_EMAIL_TEMPLATE.replace(
-        "{verificationToken}",
+        "{verificationCode}",
         verificationToken,
       ),
       category: "Email Verification",
+    });
+    console.log("Email sent:", response);
+  } catch (error) {
+    console.error("Failed to send verification email:", error.message);
+  }
+};
+
+export const sendWelcomeEmail = async (email, name) => {
+  const recipient = [{ email }];
+  try {
+    const response = await mailtrapClient.send({
+      from: {
+        email: "hello@demomailtrap.co",
+        name: "Mock MERN Auth",
+      },
+      to: recipient,
+      template_uuid: "0d10a7fc-8350-4517-9149-f4bc479f822d",
+      template_variables: {
+        company_info_name: "Test_Company_info_name",
+        name: "Test_Name",
+      },  
     });
     console.log("Email sent:", response);
   } catch (error) {
