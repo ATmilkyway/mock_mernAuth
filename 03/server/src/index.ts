@@ -7,6 +7,7 @@ import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.js";
 import errorHandler from "./middleware/errorHandler.js";
 import catchErrors from "./utils/catchErrors.js";
 import { OK } from "./constants/http.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -19,12 +20,14 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (req, res, next) => {
+app.get("/", (_, res, next) => {
   return res.status(OK).json({
     success: true,
     message: "Hello World",
   });
 });
+
+app.use("/auth", authRoutes);
 
 app.use(errorHandler);
 
