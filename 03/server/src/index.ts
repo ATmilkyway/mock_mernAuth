@@ -5,6 +5,8 @@ import express from "express";
 import connectToDatabase from "./config/db.js";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.js";
 import errorHandler from "./middleware/errorHandler.js";
+import catchErrors from "./utils/catchErrors.js";
+import { OK } from "./constants/http.js";
 
 const app = express();
 app.use(express.json());
@@ -16,25 +18,21 @@ app.use(
   }),
 );
 app.use(cookieParser());
-app.get("/health", async (req, res, next) => {
-  try {
-    // throw new Error("This is a test error.");
-    return res.status(200).json({
-      success: true,
-      message: "Hello World",
-    });
-  } catch (error) {
-    next(error);
-  }
+
+app.get("/", (req, res, next) => {
+  return res.status(OK).json({
+    success: true,
+    message: "Hello World",
+  });
 });
 
 app.use(errorHandler);
-// app.use(error )
+
 const startServer = async () => {
   try {
     await connectToDatabase();
-    app.listen(4004, () => {
-      console.log(`Server 🟢 http://localhost:4004
+    app.listen(PORT, () => {
+      console.log(`Server 🟢 http://localhost:${PORT}
         PORT:${PORT}  
         Env: ${NODE_ENV}`);
     });

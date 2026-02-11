@@ -1,8 +1,9 @@
 import type { ErrorRequestHandler } from "express";
+import { INTERNAL_SERVER_ERROR } from "../constants/http.js";
 
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   console.log(`PATH: ${req.path}`, error);
-  return res.status(500).send("Internal server error.")
+  return res.status(INTERNAL_SERVER_ERROR).send("Internal server error.");
 };
 
-export default errorHandler
+export default errorHandler;
