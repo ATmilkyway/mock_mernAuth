@@ -5,6 +5,8 @@ import SessionModel from "../models/session.model.js";
 import UserModel from "../models/user.model.js";
 import VerificationCodeModel from "../models/verificationCode.model.js";
 import { oneYearFromNow } from "../utils/date.js";
+import appAssert from "../utils/appAssert.js";
+import { CONFLICT } from "../constants/http.js";
 
 export type createAccountParams = {
   email: string;
@@ -17,9 +19,12 @@ export const createAccount = async (data: createAccountParams) => {
     email: data.email,
   });
 
-  if (existingUser) {
-    throw new Error("User already exists.");
-  }
+  // if (existingUser) {
+  //   throw new Error("User already exists.");
+  // }
+
+  appAssert(!existingUser, CONFLICT, "Email already in use");
+
   // create the user
   const user = await UserModel.create({
     email: data.email,
