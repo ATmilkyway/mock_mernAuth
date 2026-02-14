@@ -6,6 +6,7 @@ import UserModel from "@/models/user.model.js";
 import VerificationCodeModel from "@/models/verificationCode.model.js";
 import appAssert from "@/utils/appAssert.js";
 import { oneYearFromNow } from "@/utils/date.js";
+import { refreshToekenSignOption, signToken } from "@/utils/jwt.js";
 import jwt from "jsonwebtoken";
 
 export type createAccountParams = {
@@ -92,22 +93,12 @@ export const loginUser = async ({
 
   const sessionInfo = { sessionId: session._id };
   // sign access token & refresh token
-  const refreshToeken = jwt.sign(sessionInfo, JWT_REFRESH_SECRET, {
-    audience: ["user"],
-    expiresIn: "30d",
-  });
+  const refreshToeken = signToken(sessionInfo, refreshToekenSignOption);
   // access tokens
-  const accessToken = jwt.sign(
-    {
-      ...sessionInfo,
-      userId: user._id,
-    },
-    JWT_SECRET,
-    {
-      audience: ["user"],
-      expiresIn: "15m",
-    },
-  );
+  const accessToken = signToken({
+    ...sessionInfo,
+    userId: user._id,
+  });
   // return & user
   return { user: user.omitPassword(), accessToken, refreshToeken };
 };
