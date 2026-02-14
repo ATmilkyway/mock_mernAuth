@@ -1,5 +1,5 @@
 import { JWT_REFRESH_SECRET, JWT_SECRET } from "@/constants/env.js";
-import { CONFLICT } from "@/constants/http.js";
+import { CONFLICT, UNAUTHORIZED } from "@/constants/http.js";
 import verificationCodeType from "@/constants/verificationCodeType.js";
 import SessionModel from "@/models/session.model.js";
 import UserModel from "@/models/user.model.js";
@@ -7,7 +7,6 @@ import VerificationCodeModel from "@/models/verificationCode.model.js";
 import appAssert from "@/utils/appAssert.js";
 import { oneYearFromNow } from "@/utils/date.js";
 import jwt from "jsonwebtoken";
- 
 
 export type createAccountParams = {
   email: string;
@@ -64,5 +63,51 @@ export const createAccount = async (data: createAccountParams) => {
   );
   // return user &  tokens
 
-  return { user:user.omitPassword(), accessToken, refreshToeken };
+  return { user: user.omitPassword(), accessToken, refreshToeken };
+};
+
+export type LoginParams = {
+  email: string;
+  password: string;
+  userAgent?: string;
+};
+export const loginUser = async ({
+  email,
+  password,
+  userAgent,
+}: LoginParams) => {
+  // get the user by email
+  const user = await UserModel.findOne({ email }).select("+password");
+
+  appAssert(user, UNAUTHORIZED, "Invalid email or password");
+  // validate the password from the request
+  const isValid = await user.comparePassword(password);
+  appAssert(isValid, UNAUTHORIZED, "Invalid email or password");
+  const userId = user._id;
+  // create session
+  const session = await SessionModel.create({
+    userId,
+    userAgent,
+  });
+
+  const sessionInfo = { sessionId: session._id };
+  // sign access token & refresh token
+  const refreshToeken = jwt.sign(sessionInfo, JWT_REFRESH_SECRET, {
+    audience: ["user"],
+    expiresIn: "30d",
+  });
+  // access tokens
+  const accessToken = jwt.sign(
+    {
+      ...sessionInfo,
+      userId: user._id,
+    },
+    JWT_SECRET,
+    {
+      audience: ["user"],
+      expiresIn: "15m",
+    },
+  );
+  // return & user
+  return { user: user.omitPassword(), accessToken, refreshToeken };
 };
