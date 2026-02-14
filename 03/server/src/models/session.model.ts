@@ -1,6 +1,6 @@
+import { thirtyDayFromNow } from "@/utils/date.js";
 import mongoose from "mongoose";
-import { thirtyDayFromNow } from "../utils/date.js";
-
+ 
 export interface SessionDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
   userAgent?: string;

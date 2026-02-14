@@ -1,5 +1,5 @@
-import mongoose, { mongo } from "mongoose";
-import type verificationCodeType from "../constants/verificationCodeType.js";
+import type verificationCodeType from "@/constants/verificationCodeType.js";
+import mongoose, { mongo } from "mongoose"; 
 
 export interface VerificationCodeDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;

@@ -1,8 +1,10 @@
+ 
+import { CREATED } from "@/constants/http.js";
+import { createAccount } from "@/services/auth.service.js";
+import catchErrors from "@/utils/catchErrors.js";
+import { setAuthCookies } from "@/utils/cookies.js";
 import z, { email } from "zod";
-import catchErrors from "../utils/catchErrors.js";
-import { createAccount } from "../services/auth.service.js";
-import { CREATED } from "../constants/http.js";
-import { setAuthCookies } from "../utils/cookies.js";
+ 
 
 const registerSchema = z
   .object({

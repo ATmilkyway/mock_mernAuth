@@ -3,11 +3,10 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import connectToDatabase from "./config/db.js";
-import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.js";
+import { APP_ORIGIN, PORT, NODE_ENV } from "./constants/env.js";
 import errorHandler from "./middleware/errorHandler.js";
-import catchErrors from "./utils/catchErrors.js";
-import { OK } from "./constants/http.js";
 import authRoutes from "./routes/auth.routes.js";
+import { OK } from "./constants/http.js";
 
 const app = express();
 app.use(express.json());
