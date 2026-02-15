@@ -31,9 +31,11 @@ export const createAccount = async (data: createAccountParams) => {
     email: data.email,
     password: data.password,
   });
+
+  const userId = user._id;
   // create verification token
   const verificationCode = await VerificationCodeModel.create({
-    userId: user._id,
+    userId,
     type: verificationCodeType.EmailVerification,
     expireAt: oneYearFromNow(),
   });
@@ -41,27 +43,13 @@ export const createAccount = async (data: createAccountParams) => {
   // send verification email
   // create session
   const session = await SessionModel.create({
-    userId: user._id,
+    userId,
     userAgent: data.userAgent,
   });
   // sign accesss token & refresh token
-  const refreshToeken = jwt.sign(
-    { sessionId: session._id },
-    JWT_REFRESH_SECRET,
-    {
-      audience: ["user"],
-      expiresIn: "30d",
-    },
-  );
+  const refreshToeken = signToken({ sessionId: session._id });
   // access tokens
-  const accessToken = jwt.sign(
-    { userId: user._id, sessionId: session._id },
-    JWT_SECRET,
-    {
-      audience: ["user"],
-      expiresIn: "15m",
-    },
-  );
+  const accessToken = signToken({ userId, sessionId: session._id });
   // return user &  tokens
 
   return { user: user.omitPassword(), accessToken, refreshToeken };
