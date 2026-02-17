@@ -1,6 +1,6 @@
-const enum verificationCodeType {
+const enum VerificationCodeType {
   EmailVerification = "email_verification",
-  passwordReset = "password_reset",
+  PasswordReset = "password_reset",
 }
 
-export default verificationCodeType;
+export default VerificationCodeType;
