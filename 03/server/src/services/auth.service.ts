@@ -1,5 +1,9 @@
-import { JWT_REFRESH_SECRET, JWT_SECRET } from "@/constants/env.js";
-import { CONFLICT, OK, UNAUTHORIZED } from "@/constants/http.js";
+import {
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  UNAUTHORIZED,
+} from "@/constants/http.js";
 import verificationCodeType from "@/constants/verificationCodeType.js";
 import SessionModel from "@/models/session.model.js";
 import UserModel from "@/models/user.model.js";
@@ -12,7 +16,6 @@ import {
   verifyToken,
   type RefreshTokenPayload,
 } from "@/utils/jwt.js";
-import jwt from "jsonwebtoken";
 
 export type createAccountParams = {
   email: string;
@@ -42,7 +45,7 @@ export const createAccount = async (data: createAccountParams) => {
   const verificationCode = await VerificationCodeModel.create({
     userId,
     type: verificationCodeType.EmailVerification,
-    expireAt: oneYearFromNow(),
+    expiresAt: oneYearFromNow(),
   });
 
   // send verification email
@@ -133,5 +136,31 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
   return {
     accessToken,
     newRefreshToken,
+  };
+};
+
+export const verifyEmail = async (code: string) => {
+  // get the verification code
+  const validCode = await VerificationCodeModel.findOne({
+    _id: code,
+    type: verificationCodeType.EmailVerification,
+    expiresAt: { $gt: new Date() },
+  });
+  appAssert(validCode, NOT_FOUND, "Invalid or expired verification code.");
+  // update user to verified ture
+  const updateUser = await UserModel.findByIdAndUpdate(
+    validCode.userId,
+    {
+      verified: true,
+    },
+    { new: true },
+  );
+
+  appAssert(updateUser, INTERNAL_SERVER_ERROR, "Failed to verify email");
+  // delete verification code
+  await validCode.deleteOne();
+  // retun user
+  return {
+    user: updateUser.omitPassword(),
   };
 };
