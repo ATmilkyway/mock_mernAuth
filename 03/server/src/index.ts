@@ -7,6 +7,7 @@ import { APP_ORIGIN, PORT, NODE_ENV } from "./constants/env.js";
 import errorHandler from "./middleware/errorHandler.js";
 import authRoutes from "./routes/auth.routes.js";
 import { OK } from "./constants/http.js";
+import authenticate from "./middleware/authenticate.js";
 
 const app = express();
 app.use(express.json());
@@ -27,6 +28,9 @@ app.get("/", (_, res, next) => {
 });
 
 app.use("/auth", authRoutes);
+
+// protected routes
+app.use("/user", authenticate, userRoutes);
 
 app.use(errorHandler);
 
