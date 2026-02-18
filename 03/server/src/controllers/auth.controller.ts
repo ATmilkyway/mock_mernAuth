@@ -100,6 +100,6 @@ export const sendPasswordResetHandler = catchErrors(async (req, res) => {
   // call service
    await sendPasswordEmail(email);
     return res.status(OK).json({
-      message: 'Password reset email sent'
+      message: 'Password reset email sent.'
     })
 });

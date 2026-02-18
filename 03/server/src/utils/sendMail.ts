@@ -15,7 +15,7 @@ const getToEmail = (to: string) =>
 
 export const sendMail = async ({ to, subject, text, html }: Params) =>
   await resend.emails.send({
-    from: `FormAuth ${getFromEmail()}`,
+    from: getFromEmail(),
     to: getToEmail(to),
     subject,
     html,

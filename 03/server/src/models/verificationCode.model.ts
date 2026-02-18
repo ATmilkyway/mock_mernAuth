@@ -5,7 +5,7 @@ export interface VerificationCodeDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
   type: VerificationCodeType;
   expiresAt: Date;
-  createAt: Date;
+  // createAt: Date;
 }
 
 const verificationCodeSchema = new mongoose.Schema<VerificationCodeDocument>({
@@ -16,9 +16,9 @@ const verificationCodeSchema = new mongoose.Schema<VerificationCodeDocument>({
     index: true,
   },
   type: { type: String, required: true },
-  createAt: { type: Date, required: true, default: Date.now },
+  // createAt: { type: Date, required: true, default: Date.now },
   expiresAt: { type: Date, required: true, index: { expires: 0 } },
-});
+}, { timestamps: true });
 
 const VerificationCodeModel = mongoose.model(
   "VerificationCode",
