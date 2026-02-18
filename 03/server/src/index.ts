@@ -8,6 +8,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import authRoutes from "./routes/auth.routes.js";
 import { OK } from "./constants/http.js";
 import authenticate from "./middleware/authenticate.js";
+import userRoutes from "./routes/user.routes.js";
 
 const app = express();
 app.use(express.json());
