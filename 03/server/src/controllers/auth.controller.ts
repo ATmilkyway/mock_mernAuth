@@ -4,9 +4,11 @@ import {
   createAccount,
   loginUser,
   refreshUserAccessToken,
+  resetPassword,
   sendPasswordEmail,
   verifyEmail,
 } from "@/services/auth.service.js";
+import appAssert from "@/utils/appAssert.js";
 import catchErrors from "@/utils/catchErrors.js";
 import {
   clearAuthCookies,
@@ -19,10 +21,9 @@ import {
   emailSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
   verificationCodeSchema,
 } from "./auth.schama.js";
-import appAssert from "@/utils/appAssert.js";
-
 export const registerHandler = catchErrors(async (req, res) => {
   // validate request
 
@@ -98,8 +99,16 @@ export const verifyEmailHandler = catchErrors(async (req, res) => {
 export const sendPasswordResetHandler = catchErrors(async (req, res) => {
   const email = emailSchema.parse(req.body.email);
   // call service
-   await sendPasswordEmail(email);
-    return res.status(OK).json({
-      message: 'Password reset email sent.'
-    })
+  await sendPasswordEmail(email);
+  return res.status(OK).json({
+    message: "Password reset email sent.",
+  });
+});
+
+export const resetPasswordResetHandler = catchErrors(async (req, res) => {
+  const request = resetPasswordSchema.parse(req.body);
+  await resetPassword(request);
+  return clearAuthCookies(res).status(OK).json({
+    message: "Password reset successful",
+  });
 });
