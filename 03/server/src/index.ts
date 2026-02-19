@@ -33,7 +33,7 @@ app.use("/auth", authRoutes);
 
 // protected routes
 app.use("/user", authenticate, userRoutes);
-app.unsubscribe("/sessions", authenticate, sessionRoutes);
+app.use("/sessions", authenticate, sessionRoutes);
 
 app.use(errorHandler);
 
