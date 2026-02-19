@@ -1,35 +1,35 @@
-import { APP_ORIGIN } from "@/constants/env.js";
+import { APP_ORIGIN } from "../constants/env.js";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   TOO_MANY_REQUESTS,
   UNAUTHORIZED,
-} from "@/constants/http.js";
-import VerificationCodeType from "@/constants/verificationCodeType.js";
-import SessionModel from "@/models/session.model.js";
-import UserModel from "@/models/user.model.js";
-import VerificationCodeModel from "@/models/verificationCode.model.js";
-import appAssert from "@/utils/appAssert.js";
-import { hashValue } from "@/utils/bcrypt.js";
+} from "../constants/http.js";
+import VerificationCodeType from "../constants/verificationCodeType.js";
+import SessionModel from "../models/session.model.js";
+import UserModel from "../models/user.model.js";
+import VerificationCodeModel from "../models/verificationCode.model.js";
+import appAssert from "../utils/appAssert.js";
+import { hashValue } from "../utils/bcrypt.js";
 import {
   fiveMinutesAgo,
   ONE_DAY_MS,
   oneHourFromNow,
   oneYearFromNow,
   thirtyDaysFromNow,
-} from "@/utils/date.js";
+} from "../utils/date.js";
 import {
   getPasswordResetTemplate,
   getVerifyEmailTemplate,
-} from "@/utils/emailTemplates.js";
+} from "../utils/emailTemplates.js";
 import {
   refreshTokenSignOption,
   signToken,
   verifyToken,
   type RefreshTokenPayload,
-} from "@/utils/jwt.js";
-import { sendMail } from "@/utils/sendMail.js";
+} from "../utils/jwt.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export type createAccountParams = {
   email: string;

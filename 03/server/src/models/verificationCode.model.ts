@@ -1,4 +1,4 @@
-import type VerificationCodeType from "@/constants/verificationCodeType.js";
+import type VerificationCodeType from "../constants/verificationCodeType.js";
 import mongoose from "mongoose";
 
 export interface VerificationCodeDocument extends mongoose.Document {

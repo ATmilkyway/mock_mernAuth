@@ -1,4 +1,4 @@
-import { thirtyDaysFromNow } from "@/utils/date.js";
+import { thirtyDaysFromNow } from "../utils/date.js";
 import mongoose from "mongoose";
 
 export interface SessionDocument extends mongoose.Document {

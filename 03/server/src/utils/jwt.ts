@@ -1,6 +1,6 @@
-import { JWT_REFRESH_SECRET, JWT_SECRET } from "@/constants/env.js";
-import type { SessionDocument } from "@/models/session.model.js";
-import type { UserDocument } from "@/models/user.model.js";
+import { JWT_REFRESH_SECRET, JWT_SECRET } from "../constants/env.js";
+import type { SessionDocument } from "../models/session.model.js";
+import type { UserDocument } from "../models/user.model.js";
 import type { SignOptions, VerifyOptions } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 

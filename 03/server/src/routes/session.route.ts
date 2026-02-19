@@ -1,4 +1,4 @@
-import { deleteSessionHandler, getSessionHandler } from "@/controllers/session.controller.js";
+import { deleteSessionHandler, getSessionHandler } from "../controllers/session.controller.js";
 import { Router } from "express";
 
 const sessionRoutes = Router()

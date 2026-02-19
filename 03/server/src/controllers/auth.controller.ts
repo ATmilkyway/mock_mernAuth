@@ -1,5 +1,5 @@
-import { CREATED, OK, UNAUTHORIZED } from "@/constants/http.js";
-import SessionModel from "@/models/session.model.js";
+import { CREATED, OK, UNAUTHORIZED } from "../constants/http.js";
+import SessionModel from "../models/session.model.js";
 import {
   createAccount,
   loginUser,
@@ -7,16 +7,16 @@ import {
   resetPassword,
   sendPasswordEmail,
   verifyEmail,
-} from "@/services/auth.service.js";
-import appAssert from "@/utils/appAssert.js";
-import catchErrors from "@/utils/catchErrors.js";
+} from "../services/auth.service.js";
+import appAssert from "../utils/appAssert.js";
+import catchErrors from "../utils/catchErrors.js";
 import {
   clearAuthCookies,
   getAccessTokenCookieOptions,
   getRefreshAccessTokenCookieOptions,
   setAuthCookies,
-} from "@/utils/cookies.js";
-import { verifyToken } from "@/utils/jwt.js";
+} from "../utils/cookies.js";
+import { verifyToken } from "../utils/jwt.js";
 import {
   emailSchema,
   loginSchema,

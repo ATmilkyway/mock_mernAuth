@@ -3,9 +3,9 @@
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // },
 
     // Environment Settings
     "module": "nodenext",

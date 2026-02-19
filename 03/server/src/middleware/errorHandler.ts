@@ -1,6 +1,6 @@
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "@/constants/http.js";
-import AppError from "@/utils/AppError.js";
-import { clearAuthCookies, REFRESH_PATH } from "@/utils/cookies.js";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constants/http.js";
+import AppError from "../utils/AppError.js";
+import { clearAuthCookies, REFRESH_PATH } from "../utils/cookies.js";
 import type { ErrorRequestHandler, Response } from "express";
 import z from "zod";
 
