@@ -7,7 +7,6 @@ import {
   UNAUTHORIZED,
 } from "@/constants/http.js";
 import VerificationCodeType from "@/constants/verificationCodeType.js";
-import { verificationCodeSchema } from "@/controllers/auth.schama.js";
 import SessionModel from "@/models/session.model.js";
 import UserModel from "@/models/user.model.js";
 import VerificationCodeModel from "@/models/verificationCode.model.js";
@@ -122,7 +121,7 @@ export const loginUser = async ({
   return { user: user.omitPassword(), accessToken, refreshToeken };
 };
 export const refreshUserAccessToken = async (refreshToken: string) => {
-  const { payload, error } = verifyToken<RefreshTokenPayload>(refreshToken, {
+  const { payload } = verifyToken<RefreshTokenPayload>(refreshToken, {
     secret: refreshTokenSignOption.secret,
   });
   appAssert(payload, UNAUTHORIZED, "Invalid refresh token");

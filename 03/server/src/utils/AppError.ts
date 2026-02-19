@@ -4,10 +4,11 @@ import type { HttpStatusCode } from "../constants/http.js";
 export class AppError extends Error {
   constructor(
     public statusCode: HttpStatusCode,
-    public message: string,
+    message: string,
     public errorCode?: AppErrorCode,
   ) {
     super(message);
+    Object.setPrototypeOf(this, AppError.prototype);
   }
 }
 

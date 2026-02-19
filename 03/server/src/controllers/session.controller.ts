@@ -27,7 +27,7 @@ export const getSessionHandler = catchErrors(async (req, res) => {
   );
 });
 export const deleteSessionHandler = catchErrors(async (req, res) => {
-  const sessionId = z.string().parse(req.params.id);
+  const sessionId = z.string().parse(req.params["id"]);
   const deletedSession = await SessionModel.findOneAndDelete({
     _id: sessionId,
     userId: req.userId,

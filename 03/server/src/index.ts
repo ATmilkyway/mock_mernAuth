@@ -22,7 +22,7 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (_, res, next) => {
+app.get("/", (_req, res) => {
   return res.status(OK).json({
     success: true,
     message: "Hello World",

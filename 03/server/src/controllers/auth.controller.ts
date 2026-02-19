@@ -46,7 +46,7 @@ export const loginHandler = catchErrors(async (req, res) => {
     userAgent: req.headers["user-agent"],
   });
   // call serveice
-  const { accessToken, refreshToeken, user } = await loginUser(request);
+  const { accessToken, refreshToeken } = await loginUser(request);
 
   return setAuthCookies({ res, accessToken, refreshToeken })
     .status(OK)
@@ -54,8 +54,8 @@ export const loginHandler = catchErrors(async (req, res) => {
 });
 
 export const logoutHandler = catchErrors(async (req, res) => {
-  const accessToken = req.cookies.accessToken as string | undefined;
-  const { payload, error } = verifyToken(accessToken || "");
+  const accessToken = req.cookies["accessToken"] as string | undefined;
+  const { payload } = verifyToken(accessToken || "");
   if (payload) {
     await SessionModel.findByIdAndDelete(payload.sessionId);
   }
@@ -65,7 +65,7 @@ export const logoutHandler = catchErrors(async (req, res) => {
 });
 
 export const refreshHandler = catchErrors(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken as string | undefined;
+  const refreshToken = req.cookies["refreshToken"] as string | undefined;
   appAssert(refreshToken, UNAUTHORIZED, "Missing refresh token.");
 
   // call service
@@ -88,9 +88,9 @@ export const refreshHandler = catchErrors(async (req, res) => {
 });
 
 export const verifyEmailHandler = catchErrors(async (req, res) => {
-  const verificationCode = verificationCodeSchema.parse(req.params.code);
+  const verificationCode = verificationCodeSchema.parse(req.params["code"]);
   // call service
-  const { user } = await verifyEmail(verificationCode);
+  await verifyEmail(verificationCode);
   return res.status(OK).json({
     message: "Email was successfully verified",
   });
