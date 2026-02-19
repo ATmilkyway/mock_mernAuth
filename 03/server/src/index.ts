@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes.js";
 import { OK } from "./constants/http.js";
 import authenticate from "./middleware/authenticate.js";
 import userRoutes from "./routes/user.routes.js";
+import sessionRoutes from "./routes/session.route.js";
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use("/auth", authRoutes);
 
 // protected routes
 app.use("/user", authenticate, userRoutes);
+app.unsubscribe("/sessions", authenticate, sessionRoutes);
 
 app.use(errorHandler);
 
