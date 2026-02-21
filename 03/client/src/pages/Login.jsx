@@ -13,18 +13,22 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../lib/api";
 
 const Login = () => {
+  const navigator = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-
-  const {} = useMutation({
-    mutationFn:()=>{
-      
-    }
-  })
+  const {
+    mutate: signIn,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationFn: login,
+    onSuccess: () => navigator("/", { replace: true }),
+  });
   return (
     <Flex minH="100vh" align="center" justify="center">
       <Container mx="auto" maxW="md" py={12} px={6} textAlign="center">
@@ -32,6 +36,11 @@ const Login = () => {
           Sign in to your account
         </Heading>
         <Box rounded="lg" bg="gray.700" boxShadow="lg" p={8}>
+          {isError && (
+            <Box mb={3} color="red.400">
+              Invalid email or password
+            </Box>
+          )}
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
@@ -48,6 +57,9 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && signIn({ email, password })
+                }
               />
             </FormControl>
 
@@ -62,7 +74,12 @@ const Login = () => {
             >
               Forgot password?
             </ChakraLink>
-            <Button my={2} isDisabled={!email || password.length < 6}>
+            <Button
+              my={2}
+              isLoading={isPending}
+              isDisabled={!email || password.length < 6}
+              onClick={() => signIn({ email, password })}
+            >
               Sign in
             </Button>
             <Text align="center" fontSize="sm" color="text.muted">
@@ -70,7 +87,6 @@ const Login = () => {
               <ChakraLink as={Link} to="/register">
                 Sign up
               </ChakraLink>
-
             </Text>
           </Stack>
         </Box>
