@@ -5,7 +5,7 @@ import {
   loginUser,
   refreshUserAccessToken,
   resetPassword,
-  sendPasswordEmail,
+  sendPasswordResetEmail,
   verifyEmail,
 } from "../services/auth.service.js";
 import appAssert from "../utils/appAssert.js";
@@ -98,11 +98,11 @@ export const verifyEmailHandler = catchErrors(async (req, res) => {
 
 export const sendPasswordResetHandler = catchErrors(async (req, res) => {
   const email = emailSchema.parse(req.body.email);
-  // call service
-  await sendPasswordEmail(email);
-  return res.status(OK).json({
-    message: "Password reset email sent.",
-  });
+
+  // Call the service
+  const result = await sendPasswordResetEmail(email);
+
+  return res.status(OK).json(result);
 });
 
 export const resetPasswordResetHandler = catchErrors(async (req, res) => {

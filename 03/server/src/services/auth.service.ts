@@ -2,8 +2,7 @@ import { APP_ORIGIN } from "../constants/env.js";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  TOO_MANY_REQUESTS,
+  NOT_FOUND, 
   UNAUTHORIZED,
 } from "../constants/http.js";
 import VerificationCodeType from "../constants/verificationCodeType.js";
@@ -184,48 +183,53 @@ export const verifyEmail = async (code: string) => {
     user: updateUser.omitPassword(),
   };
 };
-export const sendPasswordEmail = async (email: string) => {
-  // get the user by email
-  const user = await UserModel.findOne({ email });
-  appAssert(user, NOT_FOUND, "User not found.");
-  // check email rate limit
-  const fiveMinAgo = fiveMinutesAgo();
-  const count = await VerificationCodeModel.countDocuments({
-    userId: user._id,
-    type: VerificationCodeType.PasswordReset,
-    createdAt: { $gt: fiveMinAgo },
-  });
-  appAssert(
-    count <= 1,
-    TOO_MANY_REQUESTS,
-    "Too many request, please try again later.",
-  );
-  // create verification code
-  const expiresAt = oneHourFromNow();
+export const sendPasswordResetEmail = async (email: string) => {
+  try {
+    const user = await UserModel.findOne({ email });
 
-  const verificationCode = await VerificationCodeModel.create({
-    userId: user._id,
-    type: VerificationCodeType.PasswordReset,
-    expiresAt,
-  });
-  // send verification email
-  const url = `${APP_ORIGIN}/password/reset?code=${verificationCode._id}&exp=${expiresAt.getTime()}`;
-  const { data, error } = await sendMail({
-    to: user.email,
-    ...getPasswordResetTemplate(url),
-  });
+    if (user) {
+      // Rate limit: max 2 requests in 5 minutes
+      const fiveMinAgo = fiveMinutesAgo();
+      const count = await VerificationCodeModel.countDocuments({
+        userId: user._id,
+        type: VerificationCodeType.PasswordReset,
+        createdAt: { $gt: fiveMinAgo },
+      });
 
-  appAssert(
-    data?.id,
-    INTERNAL_SERVER_ERROR,
-    `${error?.name} - ${error?.message}`,
-  );
-  // retun sucess
+      if (count <= 1) {
+        // Create verification code
+        const expiresAt = oneHourFromNow();
+        const verificationCode = await VerificationCodeModel.create({
+          userId: user._id,
+          type: VerificationCodeType.PasswordReset,
+          expiresAt,
+        });
 
-  return {
-    url,
-    emailId: data.id,
-  };
+        const url = `${APP_ORIGIN}/password/reset?code=${verificationCode._id}&exp=${expiresAt.getTime()}`;
+
+        const { data, error } = await sendMail({
+          to: user.email,
+          ...getPasswordResetTemplate(url),
+        });
+
+        if (!data?.id) {
+          console.error("Failed to send password reset email:", error);
+        }
+      } else {
+        console.log(`Too many password reset requests for user: ${email}`);
+      }
+    }
+
+    // Always return the same generic response
+    return {
+      message: "If an account exists for this email, you will receive a password reset email shortly.",
+    };
+  } catch (error: any) {
+    console.error("SendPasswordResetError:", error);
+    return {
+      message: "If an account exists for this email, you will receive a password reset email shortly.",
+    };
+  }
 };
 type ResetPasswordParams = { password: string; verificationCode: string };
 export const resetPassword = async ({
