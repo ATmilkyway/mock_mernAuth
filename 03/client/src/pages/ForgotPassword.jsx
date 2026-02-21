@@ -26,10 +26,14 @@ const ForgotPassword = () => {
     isPending,
     isSuccess,
     isError,
-    error,
   } = useMutation({
     mutationFn: sendPasswordResetEmail,
   });
+
+  const handleReset = () => {
+    if (!email.trim()) return;
+    sendPasswordReset(email.trim());
+  };
 
   return (
     <Flex minH="100vh" align="center" justify="center">
@@ -37,21 +41,25 @@ const ForgotPassword = () => {
         <Heading fontSize="4xl" mb={8}>
           Reset your password
         </Heading>
+
         <Box rounded="lg" bg="gray.700" boxShadow="lg" p={8}>
-          {isError && (
-            <Box mb={3} color="red.400">
-              {error.message || "An error occurred"}
-            </Box>
-          )}
           <Stack spacing={4}>
             {isSuccess ? (
               <Alert status="success" borderRadius={12}>
                 <AlertIcon />
-                Email sent! Check your inbox for further instructions.
+                If an account exists for this email, you will receive a reset
+                link shortly.
               </Alert>
             ) : (
               <>
-                <FormControl id="email">
+                {isError && (
+                  <Alert status="error" borderRadius={12}>
+                    <AlertIcon />
+                    Something went wrong. Please try again later.
+                  </Alert>
+                )}
+
+                <FormControl id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
                   <Input
                     type="email"
@@ -60,16 +68,18 @@ const ForgotPassword = () => {
                     autoFocus
                   />
                 </FormControl>
+
                 <Button
                   my={2}
                   isLoading={isPending}
-                  isDisabled={!email}
-                  onClick={() => sendPasswordReset(email)}
+                  isDisabled={!email.trim()}
+                  onClick={handleReset}
                 >
                   Reset Password
                 </Button>
               </>
             )}
+
             <Text align="center" fontSize="sm" color="text.muted">
               Go back to{" "}
               <ChakraLink as={Link} to="/login" replace>
@@ -86,4 +96,5 @@ const ForgotPassword = () => {
     </Flex>
   );
 };
+
 export default ForgotPassword;
