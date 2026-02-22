@@ -1,10 +1,9 @@
-import { defineRecipe } from "@chakra-ui/react"
+import { baseTheme, defineStyleConfig } from "@chakra-ui/react";
 
-export const linkRecipe = defineRecipe({
-  base: {
-    color: "primary",
-    _hover: {
-      textDecoration: "underline",
-    },
+const linkTheme = defineStyleConfig({
+  baseStyle: {
+    color: baseTheme.colors.blue[300],
   },
-})
+});
+
+export default linkTheme;

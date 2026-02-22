@@ -1,16 +1,23 @@
-import { defineRecipe } from "@chakra-ui/react"
+import { defineStyle, defineStyleConfig } from "@chakra-ui/react";
 
-export const buttonRecipe = defineRecipe({
-  base: {
-    borderRadius: "md",
-  },
-  variants: {
-    solid: {
-      bg: "primary",
-      color: "white",
-      _hover: {
-        bg: "primaryDark",
-      },
+const primary = defineStyle({
+  color: "white",
+  bg: "theme.primary",
+  _hover: {
+    bg: "theme.primaryDark",
+    _disabled: {
+      bg: "theme.primaryDark",
     },
   },
-})  
+});
+
+const buttonTheme = defineStyleConfig({
+  variants: {
+    primary,
+  },
+  defaultProps: {
+    variant: "primary",
+  },
+});
+
+export default buttonTheme;

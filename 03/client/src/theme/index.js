@@ -1,21 +1,29 @@
-import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
-import { buttonRecipe } from "./buttonTheme";
-import { linkRecipe } from "./linkTheme";
+import { baseTheme, extendTheme } from "@chakra-ui/react";
+import buttonTheme from "./buttonTheme";
+import linkTheme from "./linkTheme";
 
-const config = defineConfig({
+const config = {
+  initialColorMode: "dark",
+  useSystemColorMode: false,
+};
+
+const colors = {
   theme: {
-    tokens: {
-      colors: {
-        primary: { value: "#3182ce" },
-        primaryDark: { value: "#2b6cb0" },
-        mutedText: { value: "#a0aec0" },
-      },
-    },
-    recipes: {
-      button: buttonRecipe,
-      link: linkRecipe,
-    },
+    primary: baseTheme.colors.blue[500],
+    primaryDark: baseTheme.colors.blue[600],
+  },
+  text: {
+    muted: baseTheme.colors.gray[400],
+  },
+};
+
+const theme = extendTheme({
+  config,
+  colors,
+  components: {
+    Button: buttonTheme,
+    Link: linkTheme,
   },
 });
 
-export const system = createSystem(defaultConfig, config);
+export default theme;

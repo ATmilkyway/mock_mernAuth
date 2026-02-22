@@ -1,23 +1,24 @@
 import { Route, Routes } from "react-router";
 
 import React from "react";
-import { Button, HStack, Link } from "@chakra-ui/react";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
 
 export const Home = () => {
-  return (
-    <HStack>
-      <Button>Click me</Button>
-      <Button bg="brand.500" color="white">
-        Test Button
-      </Button>
-    </HStack>
-  );
+  return <div>Home</div>;
 };
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/email/verify/:code" element={<VerifyEmail />} />
+      {/* work on the security so it can only work only on logged device or get the logged in user id */}
+      <Route path="/password/forgot" element={<ForgotPassword />} />
     </Routes>
   );
 };
