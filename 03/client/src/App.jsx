@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AppContainer from "./components/AppContainer";
 
 export const Home = () => {
   return <div>Home</div>;
@@ -14,7 +15,10 @@ export const Home = () => {
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<AppContainer />}>
+        <Route index element={<Home />} />
+        {/* <Route path="settings" element={<Settings />} /> */}
+      </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/email/verify/:code" element={<VerifyEmail />} />
