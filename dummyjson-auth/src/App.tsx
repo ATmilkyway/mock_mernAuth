@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
- import AppLayout from "./layouts/AppLayout";
 import { Login } from "./pages/Login";
+import AppLayout from "./layouts/AppLayout";
 
 export const Profile = () => <div>Profile</div>;
 export const Settings = () => <div>Settings</div>;
