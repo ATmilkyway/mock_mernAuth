@@ -55,3 +55,7 @@ tsc-watch --onSuccess
 "node dist/index.js"  
 Restart after compilation
 ```
+
+```
+HTTP request --> Express router --> wrapper(req,res,next) --> controller(req,res,next)
+```
