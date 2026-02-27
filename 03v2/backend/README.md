@@ -35,7 +35,7 @@ package.json
 ```
 
 
-### nodemon for ts :
+### Node Auto-Restart Tools : nodemon for ts 
 ```
 tsx  
 npm install --save-dev tsx      
