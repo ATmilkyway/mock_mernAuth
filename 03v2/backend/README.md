@@ -1,6 +1,6 @@
 ### Install runtime dependencies
 ```
-npm install express dotenv mongoose bcrypt jsonwebtoken cookie-parser cors axios
+npm install express dotenv mongoose bcrypt jsonwebtoken cookie-parser cors axios zod
 ```
 
 ### Install dev dependencies
