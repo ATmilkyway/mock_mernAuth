@@ -9,5 +9,6 @@ export const registerHandler = catchErrors(async (req, res) => {
     userAgent: req.headers["user-agent"],
   });
 
+  // call service
   await createAccount(request);
 });
