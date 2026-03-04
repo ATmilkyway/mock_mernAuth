@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema<UserDocument>(
   { timestamps: true },
 );
 
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+
+  // this.password = await
+});
+// userSchema.pre("save", async function () {
+//   if (!this.isModified("password")) return;
+//   this.password = await hashValue(this.password);
+// });
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 
 export default UserModel;

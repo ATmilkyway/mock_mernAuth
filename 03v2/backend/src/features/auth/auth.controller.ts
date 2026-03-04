@@ -11,5 +11,10 @@ export const registerHandler = catchErrors(async (req, res) => {
   });
 
   // call service
-  await createAccount(request);
+  const { user } = await createAccount(request);
+
+  return res.status(201).json({
+    message: "user created successfully",
+    user,
+  });
 });
