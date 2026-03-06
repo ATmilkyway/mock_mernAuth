@@ -25,12 +25,10 @@ const verificationCodeSchema = new mongoose.Schema<VerificationCodeDocument>(
   { timestamps: true },
 );
 
-const VerificationCode = mongoose.model(
+const VerificationCodeModel = mongoose.model(
   "VerificationCode",
   verificationCodeSchema,
   "verification_codes",
 );
 
-export default VerificationCode;
-
-// export default VerificationCodeModel;
+export default VerificationCodeModel;
