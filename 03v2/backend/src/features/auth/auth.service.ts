@@ -5,7 +5,10 @@ import {
   INTERNAL_SERVER_ERROR,
 } from "../../constants/http.js";
 import appAssert from "../../utils/appAssert.js";
+import { thirtyDaysFromNow } from "../../utils/date.js";
 import UserModel from "../users/user.model.js";
+// import VerificationCodeType from "./auth.types.js";
+import VerificationCodeModel from "./verificationCode.model.js";
 
 export type createAccountParams = {
   email: string;
@@ -29,8 +32,17 @@ export const createAccount = async (data: createAccountParams) => {
     password: password,
   });
 
-  // create new user
+ 
+  // create verification code
+  const userId = newUser._id;
+  // create verification token
+  const verificationCode = await VerificationCodeModel.create({
+    userId,
+    // type: VerificationCodeType.EmailVerification,
+    expiresAt: thirtyDaysFromNow(),
+  });
   // generate access and refresh token
+ 
   // return user and token
   return {
     user: newUser.omitPassword(),
