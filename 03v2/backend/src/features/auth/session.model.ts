@@ -5,7 +5,7 @@ import { thirtyDaysFromNow } from "../../utils/date.js";
 
 interface SessionDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
-  useragent?: string;
+  userAgent?: string;
   expireAt: Date;
 }
 
@@ -16,7 +16,7 @@ const sessionSchema = new mongoose.Schema<SessionDocument>(
       type: mongoose.Types.ObjectId,
       index: true,
     },
-    useragent: {
+    userAgent: {
       type: String,
     },
     expireAt: { type: Date, default: thirtyDaysFromNow, index: { expires: 0 } },

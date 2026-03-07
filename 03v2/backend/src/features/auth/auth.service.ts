@@ -8,6 +8,7 @@ import appAssert from "../../utils/appAssert.js";
 import { thirtyDaysFromNow } from "../../utils/date.js";
 import UserModel from "../users/user.model.js";
 import VerificationCodeType from "./auth.types.js";
+import SessionModel from "./session.model.js";
 import VerificationCodeModel from "./verificationCode.model.js";
 
 export type createAccountParams = {
@@ -16,9 +17,8 @@ export type createAccountParams = {
   userAgent?: string;
 };
 export const createAccount = async (data: createAccountParams) => {
-  const { email, password, userAgent } = data;
   // check if the user exist
-  const existingUser = await UserModel.findOne({ email });
+  const existingUser = await UserModel.findOne({ email: data.email });
 
   appAssert(
     !existingUser,
@@ -29,17 +29,23 @@ export const createAccount = async (data: createAccountParams) => {
 
   // create new user
   const newUser = await UserModel.create({
-    email: email,
-    password: password,
+    email: data.email,
+    password: data.password,
   });
 
   // create verification code
   const userId = newUser._id;
-  // create verification token
+  // create verification code
   const verificationCode = await VerificationCodeModel.create({
     userId,
     type: VerificationCodeType.EmailVerification,
     expiresAt: thirtyDaysFromNow(),
+  });
+
+  // create session
+  const session = await SessionModel.create({
+    userId,
+    userAgent: data.userAgent,
   });
   // generate access and refresh token
 
