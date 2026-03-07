@@ -3,7 +3,7 @@ import { string } from "zod";
 import { extend } from "zod/mini";
 import { thirtyDaysFromNow } from "../../utils/date.js";
 
-interface SessionDocument extends mongoose.Document {
+export interface SessionDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
   userAgent?: string;
   expireAt: Date;
