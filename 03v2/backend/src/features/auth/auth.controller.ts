@@ -11,10 +11,12 @@ export const registerHandler = catchErrors(async (req, res) => {
   });
 
   // call service
-  const { user } = await createAccount(request);
+  const { user, accessToken, refreshToken } = await createAccount(request);
 
   return res.status(201).json({
     message: "user created successfully",
     user,
+    accessToken,
+    refreshToken,
   });
 });

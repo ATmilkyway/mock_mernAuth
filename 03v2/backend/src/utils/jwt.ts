@@ -16,12 +16,12 @@ type SignOptionsAndSecret = SignOptions & {
   secret: string;
 };
 
-const accessTokenSignOption: SignOptionsAndSecret = {
+export const accessTokenSignOption: SignOptionsAndSecret = {
   expiresIn: "15m",
   secret: JWT_ACCESS_SECRET,
 };
 
-const refreshTokenSignOption: SignOptionsAndSecret = {
+export const refreshTokenSignOption: SignOptionsAndSecret = {
   expiresIn: "30d",
   secret: JWT_REFRESH_SECRET,
 };
@@ -30,7 +30,7 @@ const defaults: SignOptions = {
   audience: ["user"],
 };
 
-export const sign = (
+export const signToken = (
   payload: AccessTokenPayload | RefreshTokenPayload,
   options?: SignOptionsAndSecret,
 ): string => {

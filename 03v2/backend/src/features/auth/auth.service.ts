@@ -6,6 +6,7 @@ import {
 } from "../../constants/http.js";
 import appAssert from "../../utils/appAssert.js";
 import { thirtyDaysFromNow } from "../../utils/date.js";
+import { refreshTokenSignOption, signToken } from "../../utils/jwt.js";
 import UserModel from "../users/user.model.js";
 import VerificationCodeType from "./auth.types.js";
 import SessionModel from "./session.model.js";
@@ -48,9 +49,18 @@ export const createAccount = async (data: createAccountParams) => {
     userAgent: data.userAgent,
   });
   // generate access and refresh token
-
+  const accessToken = signToken({
+    userId: newUser._id,
+    sessionId: session._id,
+  });
+  const refreshToken = signToken(
+    { sessionId: session._id },
+    refreshTokenSignOption,
+  );
   // return user and token
   return {
     user: newUser.omitPassword(),
+    accessToken,
+    refreshToken,
   };
 };
