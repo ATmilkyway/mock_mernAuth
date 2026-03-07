@@ -17,6 +17,7 @@ export type createAccountParams = {
   password: string;
   userAgent?: string;
 };
+
 export const createAccount = async (data: createAccountParams) => {
   // check if the user exist
   const existingUser = await UserModel.findOne({ email: data.email });
