@@ -1,9 +1,11 @@
+import { email } from "zod";
 import { AppErrorCode } from "../../constants/appErrorCode.js";
 import { APP_ORIGIN } from "../../constants/env.js";
 import {
   BAD_REQUEST,
   CONFLICT,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } from "../../constants/http.js";
 import appAssert from "../../utils/appAssert.js";
 import { thirtyDaysFromNow } from "../../utils/date.js";
@@ -20,6 +22,8 @@ export type createAccountParams = {
   password: string;
   userAgent?: string;
 };
+
+// register
 
 export const createAccount = async (data: createAccountParams) => {
   // check if the user exist
@@ -65,18 +69,64 @@ export const createAccount = async (data: createAccountParams) => {
   // send email
   const url = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
 
-  const { data: sendMailData, error: sendMailError } = await sendMail({
-    to: newUser.email,
-    ...getVerifyEmailTemplate(url),
-  });
+  // const { data: sendMailData, error: sendMailError } = await sendMail({
+  //   to: newUser.email,
+  //   ...getVerifyEmailTemplate(url),
+  // });
 
-  console.log(sendMailError?.message || '');
-  console.log(`Email sent :${sendMailData?.id}`);
+  // console.log(sendMailError?.message || '');
+  // console.log(`Email sent :${sendMailData?.id}`);
 
   // return user and token
   return {
-    user: newUser.omitPassword(),
+    user: newUser,
     accessToken,
     refreshToken,
   };
+};
+
+// login
+
+export type LoginParams = {
+  email: string;
+  password: string;
+  userAgent?: string;
+};
+export const loginUser = async ({
+  email,
+  password,
+  userAgent,
+}: LoginParams) => {
+  const user = await UserModel.findOne({ email });
+
+  appAssert(user, UNAUTHORIZED, "Invalid email or password.");
+
+  const userId = user._id;
+
+  const isValid = await user.comparePassword(password);
+
+  appAssert(isValid, UNAUTHORIZED, "Invalid email or password");
+
+  // create session
+  const session = await SessionModel.create({
+    userId,
+    userAgent,
+  });
+  const sessionId = session._id;
+
+  // access and refresh token
+  const accessToken = signToken({
+    userId,
+    sessionId,
+  });
+
+  const refreshToken = signToken(
+    {
+      sessionId,
+    },
+    refreshTokenSignOption,
+  );
+
+  // return user and token
+  return { user, accessToken, refreshToken };
 };

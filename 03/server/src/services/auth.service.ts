@@ -2,7 +2,7 @@ import { APP_ORIGIN } from "../constants/env.js";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
+  NOT_FOUND, 
   UNAUTHORIZED,
 } from "../constants/http.js";
 import VerificationCodeType from "../constants/verificationCodeType.js";
@@ -222,14 +222,12 @@ export const sendPasswordResetEmail = async (email: string) => {
 
     // Always return the same generic response
     return {
-      message:
-        "If an account exists for this email, you will receive a password reset email shortly.",
+      message: "If an account exists for this email, you will receive a password reset email shortly.",
     };
   } catch (error: any) {
     console.error("SendPasswordResetError:", error);
     return {
-      message:
-        "If an account exists for this email, you will receive a password reset email shortly.",
+      message: "If an account exists for this email, you will receive a password reset email shortly.",
     };
   }
 };
