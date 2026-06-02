@@ -9,17 +9,20 @@ interface SessionDocument extends mongoose.Document {
   expireAt: Date;
 }
 
-const sessionSchema = new mongoose.Schema<SessionDocument>({
-  userId: {
-    ref: "User",
-    type: mongoose.Types.ObjectId,
-    index: true,
+const sessionSchema = new mongoose.Schema<SessionDocument>(
+  {
+    userId: {
+      ref: "User",
+      type: mongoose.Types.ObjectId,
+      index: true,
+    },
+    useragent: {
+      type: String,
+    },
+    expireAt: { type: Date, default: thirtyDaysFromNow, index: { expires: 0 } },
   },
-  useragent: {
-    type: String,
-  },
-  expireAt: { type: Date, default: thirtyDaysFromNow, index: { expires: 0 } },
-});
+  { timestamps: true },
+);
 
 const SessionModel = mongoose.model("Session", sessionSchema);
 
