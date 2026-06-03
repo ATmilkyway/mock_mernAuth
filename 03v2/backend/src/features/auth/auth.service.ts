@@ -24,13 +24,14 @@ export const createAccount = async (data: createAccountParams) => {
     AppErrorCode.EMAIL_ALREADY_EXISTS,
   );
 
+  // create new user
   const newUser = await UserModel.create({
     email: email,
     password: password,
   });
 
-  // create new user
   // generate access and refresh token
+  
   // return user and token
   return {
     user: newUser.omitPassword(),
